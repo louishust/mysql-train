@@ -6,18 +6,28 @@ The Train Test Suite simulate many situation that MySQL DBA always encountered.
 Each test case simulate one situation, the test case can't pass until DBA resolve
 the situation.
 
+There are four directories: train, train5, train, train7.
+
+train directory contains test cases which behavior the same for all MySQL version.
+
+train5 directory contains test cases which only happens on MySQL5.5 .
+
+train6 directory contains test cases which only happens on MySQL5.6 .
+
+train7 directory contains test cases which only happens on MySQL5.7 .
+
 
 ### How to run test
 
-First copy the train directory to MYSQL\_INSTALL\_DIR/mysql-test/suite/
+First copy the train/train5/train6/train7 directory to MYSQL\_INSTALL\_DIR/mysql-test/suite/
 
 ```
-cp -r train MYSQL_INSTALL_DIR/mysql-test/suite/
+cp -r trainX MYSQL_INSTALL_DIR/mysql-test/suite/
 ```
 
 
 ```
-./mtr --suite=train [ TESTCASE ]
+./mtr --suite=trainX [ TESTCASE ]
 ```
 
 ### Test Case Details
