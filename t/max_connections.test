@@ -1,0 +1,28 @@
+connect (conn1,localhost,root,,mysql,13000);
+connect (conn2,localhost,root,,mysql,13000);
+connect (conn3,localhost,root,,mysql,13000);
+connect (conn4,localhost,root,,mysql,13000);
+connect (conn5,localhost,root,,mysql,13000);
+
+connection default;
+
+
+# wait for new login
+let $count= `select count(*) from information_schema.processlist`;
+while ($count <= 6)
+{
+  let $count= `select count(*) from information_schema.processlist`;
+  sleep 0.5;
+}
+
+
+# wait for max_connections back to 5
+let $count= query_get_value(SHOW VARIABLES LIKE 'max_connections',Value,1);
+while ($count != 5)
+{
+  let $count= query_get_value(SHOW VARIABLES LIKE 'max_connections',Value,1);
+  sleep 0.5;
+}
+
+
+SHOW VARIABLES LIKE 'max_connections';
