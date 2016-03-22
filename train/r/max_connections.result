@@ -1,3 +1,0 @@
-SHOW VARIABLES LIKE 'max_connections';
-Variable_name	Value
-max_connections	5

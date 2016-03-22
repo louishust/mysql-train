@@ -1,1 +1,1 @@
---max_connections=5 --general-log=on
+--max_connections=5

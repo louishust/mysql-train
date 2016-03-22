@@ -1,0 +1,38 @@
+connection default;
+--disable_query_log
+set global net_buffer_length=1024;
+set global max_allowed_packet=1024;
+
+create table t1(c1 varchar(1024), c2 varchar(1024));
+
+echo;
+echo;
+
+echo #########################  Please insert one row like below ######################;
+echo;
+echo insert into test.t1 values('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
+# wait until one big row inserted
+let $row_count= `select COUNT(*) from t1`;
+while ($row_count != 1)
+{
+  let $row_count= `select COUNT(*) from t1`;
+  sleep 0.5;
+}
+
+let $row_length= `select LENGTH(c1) + LENGTH(c2) as len from t1 order by len desc limit 1`;
+while ($row_length < 1024)
+{
+  let $row_length= `select LENGTH(c1) + LENGTH(c2) as len from t1 order by len desc limit 1`;
+  sleep 0.5;
+}
+
+echo;
+echo;
+echo #########################  Congratulations! You Pass The Test!  ##############################;
+
+# wait user modify variables to startup
+set global max_allowed_packet=10240;
+set global net_buffer_length=10240;
+
+#clean
+DROP TABLE t1;

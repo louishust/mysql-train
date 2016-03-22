@@ -30,11 +30,14 @@ cp -r trainX MYSQL_INSTALL_DIR/mysql-test/suite/
 ./mtr --suite=trainX [ TESTCASE ]
 ```
 
-### Test Case Details
+### Test Cases in train
 
 1. max\_connections
+2. max\_allowed\_packet
 
-    This test case simulate the current connections exceed the "max_connections" parameter,
-    So that DBA can not login database.
 
-    User must find the way to login in the database, then execute set global max_connections=5.
+### Test Cases in train5
+
+### Test Cases in train6
+
+### Test Cases in train7
