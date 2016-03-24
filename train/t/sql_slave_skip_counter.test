@@ -1,0 +1,39 @@
+--disable_query_log
+
+--source include/master-slave.inc
+call mtr.add_suppression("Error_code: 1032");
+
+connection master;
+CREATE TABLE t1(a INT, PRIMARY KEY(a)) engine=innodb;
+insert into t1(a) values(1);
+insert into t1(a) values(2);
+insert into t1(a) values(3);
+
+--source include/sync_slave_sql_with_master.inc
+
+connection slave;
+delete from t1 where a = 3;
+
+connection master;
+delete from t1 where a = 3;
+insert into t1 values(100);
+
+echo;
+echo;
+echo #########################  Please resume the replication on 13001 ######################;
+
+connection slave;
+let $count= `select count(*) from t1 where a = 100`;
+while ($count == 0)
+{
+  let $count= `select count(*) from t1 where a = 100`;
+  sleep 0.5;
+}
+
+
+echo;
+echo #########################  Congratulations! You Pass The Test!  ##############################;
+
+connection master;
+DROP TABLE t1;
+--source include/rpl_end.inc
