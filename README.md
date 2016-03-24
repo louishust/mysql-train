@@ -34,6 +34,7 @@ cp -r trainX MYSQL_INSTALL_DIR/mysql-test/suite/
 
 1. max\_connections
 2. max\_allowed\_packet
+3. sql\_slave\_skip\_counter
 
 
 ### Test Cases in train5
