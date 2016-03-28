@@ -1,0 +1,38 @@
+connection default;
+
+let $max= query_get_value(show variables like 'max_connections', Value, 1);
+if ($max < 2000)
+{
+  die execute ulimit -n 5000 before execute this test case;
+}
+
+--disable_query_log
+let $a=0;
+let $conn = "conn" + $a;
+connect ($conn,localhost,root,,mysql,13000);
+connection $conn;
+send select sleep(99999);
+sleep 0.5;
+
+echo;
+echo;
+echo #########################  Please kill all slow queries like "SELECT SLEEP(99999)" ######################;
+
+connection default;
+let $count= `select count(*) from information_schema.processlist where State = 'User sleep'`;
+while ($count > 0)
+{
+  echo There are still [$count] slow querys;
+  inc $a;
+  let $conn = "conn" + $a;
+  connect ($conn,localhost,root,,mysql,13000);
+  connection $conn;
+  send select sleep(99999);
+  sleep 1;
+
+  connection default;
+  let $count= `select count(*) from information_schema.processlist where State = 'User sleep'`;
+}
+
+echo;
+echo #########################  Congratulations! You Pass The Test!  ##############################;
