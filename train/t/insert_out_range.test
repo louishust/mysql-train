@@ -1,0 +1,25 @@
+--disable_query_log
+
+connection default;
+
+create table test.t(c1 tinyint);
+
+
+echo;
+echo;
+echo;
+echo #########################  Please insert 128 into table test.t on port 13000 ######################;
+
+
+let $count= `select count(*) from test.t where c1 = 128`;
+while ($count == 0)
+{
+  let $count= `select count(*) from test.t where c1 = 128`;
+  sleep 0.5;
+}
+
+echo;
+echo #########################  Congratulations! You Pass The Test!  ##############################;
+
+
+drop table test.t;
