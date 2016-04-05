@@ -19,28 +19,22 @@ train7 directory contains test cases which only happens on MySQL5.7 .
 
 ### How to run test
 
-First copy the train/train5/train6/train7 directory to MYSQL\_INSTALL\_DIR/mysql-test/suite/
+Before you run test, you should export MYSQL\_BASEDIR ENV variable like below:
 
 ```
-cp -r trainX MYSQL_INSTALL_DIR/mysql-test/suite/
+export MYSQL_BASE_DIR=[MySQL Installed Directory]
+```
+
+1. Install test cases
+
+```
+./install.sh
 ```
 
 
+2. Run test cases
+
 ```
-./mtr --suite=trainX [ TESTCASE ]
+./run.sh
 ```
 
-### Test Cases in train
-
-1. ./mtr --suite=train max\_connections
-2. ./mtr --suite=train max\_allowed\_packet
-3. ./mtr --suite=train sql\_slave\_skip\_counter
-4. ./mtr --max-connections=5000 --suite=train kill\_slow\_query
-5. ./mtr --suite=train insert\_out\_range
-
-
-### Test Cases in train5
-
-### Test Cases in train6
-
-### Test Cases in train7

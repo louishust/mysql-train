@@ -1,0 +1,35 @@
+--disable_query_log
+
+connection default;
+create table test.t(c1 tinyint primary key) ENGINE=INNODB;
+begin;
+insert into test.t values(1);
+
+echo;
+echo;
+echo;
+echo #########################  Please insert one row like below ######################;
+echo insert into test.t values(1);
+
+let $a=0;
+let $conn = "conn" + $a;
+connect ($conn,localhost,root,,mysql,13000);
+connection $conn;
+let $count= `select count(*) from test.t where c1 = 1`;
+while ($count == 0)
+{
+  inc $a;
+  let $conn = "conn" + $a;
+  connect ($conn,localhost,root,,mysql,13000);
+  connection $conn;
+  let $count= `select count(*) from test.t where c1 = 1`;
+  sleep 1;
+}
+
+echo;
+echo #########################  Congratulations! You Pass The Test!  ##############################;
+DROP TABLE test.t;
+
+
+
+
