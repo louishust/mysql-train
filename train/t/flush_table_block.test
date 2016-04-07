@@ -1,0 +1,37 @@
+--disable_query_log
+
+connection default;
+create table test.t(c1 tinyint primary key) ENGINE=INNODB;
+send select user, sleep(99999) from mysql.user;
+sleep 0.2;
+
+
+connect (flush_conn,localhost,root,,mysql,13000);
+connection flush_conn;
+send flush tables with read lock;
+
+sleep 0.2;
+
+echo;
+echo;
+echo;
+echo #########################  One insert statement is blocked, please solve it! ######################;
+
+connect (insert_conn,localhost,root,,mysql,13000);
+connection insert_conn;
+send insert into test.t values(1);
+
+connection flush_conn;
+reap;
+unlock tables;
+
+connection insert_conn;
+reap;
+
+echo;
+echo #########################  Congratulations! You Pass The Test!  ##############################;
+DROP TABLE test.t;
+
+
+
+
