@@ -1,0 +1,38 @@
+--source include/master-slave.inc
+--disable_query_log
+
+connection master;
+create table test.t(c1 int);
+sync_slave_with_master;
+
+connection slave;
+stop slave;
+reset slave all;
+
+connection master;
+reset master;
+insert into test.t values(1);
+
+echo;
+echo;
+echo #########################  Please Configure Slave on 13001 with following parameter: ######################;
+echo ##########  Master_Port=13000, Master_Log_File=master-bin.000001, MASTER_LOG_POS=120 ########;
+
+connection slave;
+let $count= `select count(*) from test.t`;
+while ($count == 0)
+{
+  sleep 0.5;
+  let $count= `select count(*) from test.t`;
+}
+
+
+echo;
+echo #########################  Congratulations! You Pass The Test!  ##############################;
+
+## clean up
+connection master;
+drop table test.t;
+sync_slave_with_master;
+
+--source include/rpl_end.inc
